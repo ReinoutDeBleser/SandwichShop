@@ -16,26 +16,7 @@ function whatIsHappening() {
     var_dump($_SESSION);
 }
 
-//your products with their price.
-$products =  [
-    ['name' => 'Club Ham', 'price' => 3.20],
-    ['name' => 'Club Cheese', 'price' => 3],
-    ['name' => 'Club Cheese & Ham', 'price' => 4],
-    ['name' => 'Club Chicken', 'price' => 4],
-    ['name' => 'Club Salmon', 'price' => 5]
-];
-
 switch ($_GET["food"]) {
-    case ("1"): {
-        $products =  [
-            ['name' => 'Club Ham', 'price' => 3.20],
-            ['name' => 'Club Cheese', 'price' => 3],
-            ['name' => 'Club Cheese & Ham', 'price' => 4],
-            ['name' => 'Club Chicken', 'price' => 4],
-            ['name' => 'Club Salmon', 'price' => 5]
-        ];
-        break;
-    }
     case ("0"): {
         $products =  [
             ['name' => 'Cola', 'price' => 2],
@@ -54,10 +35,7 @@ switch ($_GET["food"]) {
             ['name' => 'Club Salmon', 'price' => 5]
         ];
     }
-
 }
-
-
 
 $email = $emailErr = "";
 
@@ -163,24 +141,6 @@ else {$totalValue = 0;
 }
 $i = 0;
 $addedValue = 0;
-
-//Todo: I am trying to make this work.
-// foreach of the elements in the $products-variable which is an array,
-// i define an index in a new array product which contains the objects contained in $products as a new variable.
-// as such i'm trying to gather the price of the $product when it is checked in the isset $_POST("product[$i]")
-// though trying this appears to give issues.
-
-// name="products[echo $i]" is what is written in the form-view. this means that the names of the elements we're trying to refer to are only being made after they've already been checked.
-// this means I should probably
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    foreach ($products as $i => $product) {
-        if (isset($product)) {
-            $productPrice = $product['price'];
-            $totalValue += $productPrice;
-            $_SESSION['totalValue'] = $totalValue;
-        }
-    }
-}
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             if (
                                 $emailErr === "" &&
@@ -188,21 +148,29 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 $cityErr === "" &&
                                 $streetnumberErr === "" &&
                                 $zipcodeErr === ""
-                            )
+                            ) {
+                                foreach($products AS $i => $product) {
+                                    if (isset($_POST["products"][$i])){
+                                        $totalValue += $product['price'];
+                                        $_SESSION['totalValue']= $totalValue;
+                                    }
+                                }
                                 if (isset($_POST['express_delivery'])){
                                     echo $valid = '<div class="alert alert-primary" role="alert"> Your order has been sent. ETA: 45 minutes </div>';
                                 }
                                 else {
                                     echo $valid = '<div class="alert alert-primary" role="alert"> Your order has been sent. ETA: 2 hours </div>';
                                 }
-                            echo $valid = "";
+}
+                            else {
+                                echo $valid = "";
+                            }
                         }
 
 
 //with foreach loop using the structure of the checkbox generator to cycle through all checked values
 // and returning a 0 value if unchecked so that they are still able to be added to the $_SESSION;
 
-$_SESSION["test"] = "SICCO";
 whatIsHappening();
 
 require 'form-view.php';
