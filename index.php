@@ -136,7 +136,6 @@ if (isset($_SESSION["totalValue"]) && !empty($_SESSION["totalValue"])) {
 else {$totalValue = 0;
 }
 $i = 0;
-$addedValue = 0;
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             if (
                                 $emailErr === "" &&
@@ -147,17 +146,42 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             ) {
                                 foreach($products AS $i => $product) {
                                     if (isset($_POST["products"][$i])){
-                                        $totalValue += $product['price'];
+                                        $addedName[$i] = $product['name'];
+                                        //echo $addedName[$i];
+                                        print_r($addedName[$i]);
+                                        $addedValue[$i] = $product['price'];
+                                        echo $addedValue[$i];
+                                        $totalValue = $product['price'];
                                         $_SESSION['totalValue']= $totalValue;
                                     }
                                 }
+                                print_r($addedValue);
+
                                 if (isset($_POST['express_delivery'])){
                                     echo $valid = '<div class="alert alert-primary" role="alert"> Your order has been sent. ETA: 45 minutes </div>';
+                                    $totalValue += 5;
+                                    $_SESSION['totalValue']= $totalValue;
+                                    $express = "5 €";
                                 }
                                 else {
                                     echo $valid = '<div class="alert alert-primary" role="alert"> Your order has been sent. ETA: 2 hours </div>';
                                 }
-}
+//                              $receiver = "reinout.de.bleser@gmail.com";
+//                              $subject = "Purchase overview";
+//                              $body = "\n
+//                              Hi there $email\n
+//                              We will send your order to $street $streetnumber, $city, $zipcode \n
+//                              Thanks for your business dear customer\n
+//                              The items you ordered were
+//                              $addedValue[$i]\n
+//                              Your total order price was $totalValue";
+//                              $sender = "From:reinout.de.bleser@gmail.com";
+//                              if (mail($receiver, $subject, $body, $sender)) {
+//                                  echo "Email sent successfully to $receiver";
+//                              } else {
+//                                  echo "Sorry, failed while sending mail!";
+//                              }
+                            }
                             else {
                                 echo $valid = "";
                             }
