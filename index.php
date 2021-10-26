@@ -16,17 +16,15 @@ function whatIsHappening() {
     var_dump($_SESSION);
 }
 
-switch ($_GET["food"]) {
-    case ("0"): {
+if (isset($_GET["food"]) && $_GET["food"] === "0"){
         $products =  [
             ['name' => 'Cola', 'price' => 2],
             ['name' => 'Fanta', 'price' => 2],
             ['name' => 'Sprite', 'price' => 2],
             ['name' => 'Ice-tea', 'price' => 3],
         ];
-        break;
     }
-    default:{
+    else{
         $products =  [
             ['name' => 'Club Ham', 'price' => 3.20],
             ['name' => 'Club Cheese', 'price' => 3],
@@ -34,12 +32,10 @@ switch ($_GET["food"]) {
             ['name' => 'Club Chicken', 'price' => 4],
             ['name' => 'Club Salmon', 'price' => 5]
         ];
-    }
 }
-
 $email = $emailErr = "";
 
-if ($_SESSION["email"] !== "") {
+if (isset($_SESSION["email"]) && !empty($_SESSION["email"])){
     $email = $_SESSION["email"];
 }
 
@@ -58,7 +54,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 $street = $streetErr = "";
 
-if ($_SESSION["street"] !== ""){
+if (isset($_SESSION["street"]) && !empty($_SESSION["street"])){
     $street = $_SESSION["street"];
 }
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -76,7 +72,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 $city = $cityErr = "";
 
-if ($_SESSION["city"] !== ""){
+if (isset($_SESSION["city"]) && !empty($_SESSION["city"])){
     $city = $_SESSION["city"];
 }
 
@@ -96,7 +92,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 $streetnumber = $streetnumberErr = "";
 
-if ($_SESSION["streetnumber"] !== ""){
+if (isset($_SESSION["streetnumber"]) && !empty($_SESSION["streetnumber"])){
     $streetnumber = $_SESSION["streetnumber"];
 }
 
@@ -115,7 +111,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 $zipcode = $zipcodeErr = "";
 
-if ($_SESSION["zipcode"] !== ""){
+if (isset($_SESSION["zipcode"]) && !empty($_SESSION["zipcode"])){
     $zipcode = $_SESSION["zipcode"];
 }
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -134,7 +130,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 $valid = "";
 
-if ($_SESSION["totalValue"] !== null) {
+if (isset($_SESSION["totalValue"]) && !empty($_SESSION["totalValue"])) {
     $totalValue = $_SESSION["totalValue"];
 }
 else {$totalValue = 0;
