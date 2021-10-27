@@ -5,7 +5,7 @@ declare(strict_types=1);
 //we are going to use session variables, so we need to enable sessions
 session_start();
 //
-/*function whatIsHappening() {
+function whatIsHappening() {
     echo '<h2>$_GET</h2>';
     var_dump($_GET);
     echo '<h2>$_POST</h2>';
@@ -14,7 +14,35 @@ session_start();
     var_dump($_COOKIE);
     echo '<h2>$_SESSION</h2>';
     var_dump($_SESSION);
-}*/
+}
+
+$email = $street = $streetnumber = $city = $zipcode = $valid = "";
+$totalValue = $i =  0;
+
+
+$emailErrReq = '<div class="alert alert-primary" role="alert"> Email is required</div>';
+$emailErrInv = '<div class="alert alert-primary" role="alert">Invalid email format </div>';
+$streetErrReq = '<div class="alert alert-primary" role="alert"> Street is required </div>';
+$streetErrInv = '<div class="alert alert-primary" role="alert"> Invalid street format </div>';
+$cityErrReq = '<div class="alert alert-primary" role="alert"> City is required </div>';
+$cityErrInv = '<div class="alert alert-primary" role="alert"> Invalid city format </div>';
+$streetnumberErrReq = '<div class="alert alert-primary" role="alert"> Streetnumber is required <br></div>';
+$streetnumberErrInv = '<div class="alert alert-primary" role="alert"> Invalid streetnumber format </div>';
+$zipcodeErrReq = '<div class="alert alert-primary" role="alert"> Zipcode is required </div>';
+$zipcodeErrInv = '<div class="alert alert-primary" role="alert">Invalid zipcode format </div>';
+
+$errors = [
+    ['name' => 'emailErrReq', 'value' => $emailErrReq],
+    ['name' => 'emailErrInv', 'value' => $emailErrInv],
+    ['name' => 'streetErrReq', 'value' => $streetErrReq],
+    ['name' => 'streetErrInv', 'value' => $streetErrInv],
+    ['name' => 'cityErrReq', 'value' => $cityErrReq],
+    ['name' => 'cityErrInv', 'value' => $cityErrInv],
+    ['name' => 'streetnumberErrReq', 'value' => $streetnumberErrReq],
+    ['name' => 'streetnumberErrInv', 'value' => $streetnumberErrInv],
+    ['name' => 'zipcodeErrReq', 'value' => $zipcodeErrReq],
+    ['name' => 'zipcodeErrInv', 'value' => $zipcodeErrInv]
+    ];
 
 if (isset($_GET["food"]) && $_GET["food"] === "0") {
     $products = [
@@ -32,118 +60,99 @@ if (isset($_GET["food"]) && $_GET["food"] === "0") {
         ['name' => 'Club Salmon', 'price' => 5]
     ];
 }
-$email = $emailErr = "";
+$variables = ["email", "street", "city", "streetnumber", "zipcode"];
 
-if (isset($_SESSION["email"]) && !empty($_SESSION["email"])) {
-    $email = $_SESSION["email"];
-}
-
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    if (empty($_POST["email"])) {
-        echo $emailErr = '<div class="alert alert-primary" role="alert"> Email is required</div>';
-    } else {
-        $email = $_POST["email"];
-        $_SESSION["email"] = $email;
-        // check if e-mail address is well-formed
-        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            echo $emailErr = '<div class="alert alert-primary" role="alert">Invalid email format </div>';
-        }
+foreach ($variables as $v)
+    if (isset($_SESSION[$v]) && !empty($_SESSION[$v])) {
+        $$v = $_SESSION[$v];
     }
-}
 
-$street = $streetErr = "";
-
-if (isset($_SESSION["street"]) && !empty($_SESSION["street"])) {
-    $street = $_SESSION["street"];
-}
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    if (empty($_POST["street"])) {
-        echo $streetErr = '<div class="alert alert-primary" role="alert"> Street is required </div>';
-    } else {
-        $street = $_POST["street"];
-        $_SESSION["street"] = $street;
-        // check if e-mail address is well-formed
-        if (!preg_match('/^[\p{L} ]+$/u', $street)) {
-            echo $streetErr = '<div class="alert alert-primary" role="alert"> Invalid street format </div>';
-        }
-    }
-}
-
-$city = $cityErr = "";
-
-if (isset($_SESSION["city"]) && !empty($_SESSION["city"])) {
-    $city = $_SESSION["city"];
-}
-
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    if (empty($_POST["city"])) {
-        echo $cityErr = '<div class="alert alert-primary" role="alert"> City is required </div>';
-
-    } else {
-        $city = $_POST["city"];
-        $_SESSION["city"] = $city;
-        // check if city address is well-formed
-        if (!preg_match('/^[\p{L} ]+$/u', $city)) {
-            echo $cityErr = '<div class="alert alert-primary" role="alert"> Invalid city format </div>';
-        }
-    }
-}
-
-$streetnumber = $streetnumberErr = "";
-
-if (isset($_SESSION["streetnumber"]) && !empty($_SESSION["streetnumber"])) {
-    $streetnumber = $_SESSION["streetnumber"];
-}
-
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    if (empty($_POST["streetnumber"])) {
-        echo $streetnumberErr = '<div class="alert alert-primary" role="alert"> Streetnumber is required <br></div>';
-
-    } else {
-        $streetnumber = $_POST["streetnumber"];
-        $_SESSION["streetnumber"] = $streetnumber;
-        // check if e-mail address is well-formed
-        if (!filter_var($streetnumber, FILTER_SANITIZE_NUMBER_INT)) {
-            echo $streetnumberErr = '<div class="alert alert-primary" role="alert"> Invalid streetnumber format </div>';
-        }
-    }
-}
-$zipcode = $zipcodeErr = "";
-
-if (isset($_SESSION["zipcode"]) && !empty($_SESSION["zipcode"])) {
-    $zipcode = $_SESSION["zipcode"];
-}
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    if (empty($_POST["zipcode"])) {
-        echo $zipcodeErr = '<div class="alert alert-primary" role="alert"> Zipcode is required </div>';
-    } else {
-        $zipcode = $_POST["zipcode"];
-        $_SESSION["zipcode"] = $zipcode;
-        // check if e-mail address is well-formed
-        if (!filter_var($zipcode, FILTER_SANITIZE_NUMBER_INT)) {
-            echo $zipcodeErr = '<div class="alert alert-primary" role="alert">Invalid zipcode format </div>';
-        }
-    }
-}
-
-
-$valid = "";
+//backup if foreach would fail.
+//if (isset($_SESSION["street"]) && !empty($_SESSION["street"])) {
+//    $street = $_SESSION["street"];
+//}
+//if (isset($_SESSION["city"]) && !empty($_SESSION["city"])) {
+//    $city = $_SESSION["city"];
+//}
+//if (isset($_SESSION["streetnumber"]) && !empty($_SESSION["streetnumber"])) {
+//    $streetnumber = $_SESSION["streetnumber"];
+//}
+//if (isset($_SESSION["zipcode"]) && !empty($_SESSION["zipcode"])) {
+//    $zipcode = $_SESSION["zipcode"];
+//}
 
 if (isset($_SESSION["totalValue"]) && !empty($_SESSION["totalValue"])) {
     $totalValue = $_SESSION["totalValue"];
 } else {
     $totalValue = 0;
 }
-$i = 0;
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    //Validation for email
+    if (empty($_POST["email"])) {
+        //will throw REQUIRED error if empty
+        echo  $emailErrReq;
+    } else {
+        $email = $_POST["email"];
+        $_SESSION["email"] = $email;
+        // check if e-mail address is well-formed
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            //will throw INVALID error if invalid format (or characters?) are used.
+            echo $emailErrInv;
+        }
+    }
+    if (empty($_POST["street"])) {
+        echo $streetErrReq;
+    } else {
+        $street = $_POST["street"];
+        $_SESSION["street"] = $street;
+        // check if e-mail address is well-formed
+        if (!preg_match('/^[\p{L} ]+$/u', $street)) {
+            echo $streetErrInv;
+        }
+    }
+    if (empty($_POST["city"])) {
+        echo $cityErrReq;
+    } else {
+        $city = $_POST["city"];
+        $_SESSION["city"] = $city;
+        // check if city address is well-formed
+        if (!preg_match('/^[\p{L} ]+$/u', $city)) {
+            echo $cityErrInv;
+        }
+    }
+    if (empty($_POST["streetnumber"])) {
+        echo $streetnumberErrReq;
+
+    } else {
+        $streetnumber = $_POST["streetnumber"];
+        $_SESSION["streetnumber"] = $streetnumber;
+        // check if e-mail address is well-formed
+        if (!filter_var($streetnumber, FILTER_SANITIZE_NUMBER_INT)) {
+            echo $streetnumberErrInv;
+        }
+    }
+    if (empty($_POST["zipcode"])) {
+        echo $zipcodeErrReq;
+    } else {
+        $zipcode = $_POST["zipcode"];
+        $_SESSION["zipcode"] = $zipcode;
+        // check if e-mail address is well-formed
+        if (!filter_var($zipcode, FILTER_SANITIZE_NUMBER_INT)) {
+            echo $zipcodeErrInv;
+        }
+    }
+    //Todo: make the requirements work.
     if (
-        $emailErr === "" &&
-        $streetErr === "" &&
-        $cityErr === "" &&
-        $streetnumberErr === "" &&
-        $zipcodeErr === ""
+        ($emailErrReq === "" && $emailErrInv === "") &&
+        ($streetErrReq === ""&& $emailErrInv === "") &&
+        ($cityErrReq === "" && $cityErrInv === "") &&
+        ($streetnumberErrReq === "" && $streetnumberErrInv === "") &&
+        ($zipcodeErrReq === "" && $zipcodeErrInv === "")
     ) {
-        //object structuring and destructuring.
+        //Todo: object structuring and destructuring DONE.
+        //with foreach loop using the structure of the checkbox generator to cycle through all checked values
+        //and returning a 0 value if unchecked so that they are still able to be added to the $_SESSION;
         foreach ($products as $i => $product) {
             if (isset($_POST["products"][$i])) {
                 $addedName[$i] = $product['name'];
@@ -155,8 +164,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $_SESSION['totalValue'] = $totalValue;
             }
         }
-        print_r($addedValue);
-
         if (isset($_POST['express_delivery'])) {
             echo $valid = '<div class="alert alert-primary" role="alert"> Your order has been sent. ETA: 45 minutes </div>';
             $express = 5;
@@ -165,48 +172,49 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         } else {
             echo $valid = '<div class="alert alert-primary" role="alert"> Your order has been sent. ETA: 2 hours </div>';
         }
-        echo "Hi there $email,<br>
-                                We will send your order to $street $streetnumber, $city, $zipcode,<br>
-                                Thanks for your business dear customer,<br>
-                                The items you ordered were:<br>";
-        foreach ($products as $i => $product) {
-            if (isset($_POST["products"][$i])) {
-                echo $addedName[$i] . " cost you " . $addedValue[$i] . "€ <br>";
-            }
-        }
+        //Todo: email  used to work in echo format.
+//        echo "Hi there $email,<br>
+//              We will send your order to $street $streetnumber, $city, $zipcode,<br>
+//              Thanks for your business dear customer,<br>
+//              The items you ordered were:<br>";
+//        foreach ($products as $i => $product) {
+//            if (isset($_POST["products"][$i])) {
+//                echo $addedName[$i] . " cost you " . $addedValue[$i] . "€ <br>";
+//            }
+//        }
+//array creation for clicked boxes to order from. validation of those elements and the sending of the email with the correct information.
         if (isset($_POST['express_delivery'])) {
             echo "Express delivery cost you $express € <br>";
         }
-        echo "The total cost of your order was $totalValue €";
+//                    foreach ($products as $i => $product) {
+//                    if (isset($_POST["products"][$i])) {
+//                    echo $addedName[$i] . " cost you " . $addedValue[$i] . "€ \n";
+//                      }
+//                     }
+        $receiver = "reinout.de.bleser@gmail.com";
+        $subject = "Purchase overview";
+        $body = "Hi there $email,\n
+                We will send your order to $street $streetnumber, $city, $zipcode,\n
+                    Thanks for your business dear customer,\n
+                    The items you ordered were:\n
 
-//
-//                              Your total order price was $totalValue";
-//                              $receiver = "reinout.de.bleser@gmail.com";
-//                              $subject = "Purchase overview";
-//                              $body = "\n
-//                              Hi there $email\n
-//                              We will send your order to $street $streetnumber, $city, $zipcode\n
-//                              Thanks for your business dear customer\n
-//                              The items you ordered were:\n"
-//                              foreach($products AS $i => $product){
-//                              echo $addedValue[$i][0] cost $addedValue[$i][1]}
-//
-//                              Your total order price was $totalValue";
-//                              $sender = "From:reinout.de.bleser@gmail.com";
-//                              if (mail($receiver, $subject, $body, $sender)) {
-//                                  echo "Email sent successfully to $receiver";
-//                              } else {
-//                                  echo "Sorry, failed while sending mail!";
-//                              }
+                    The total cost of your order was $totalValue €";
+        $sender = "From:reinout.de.bleser@gmail.com";
+        if (mail($receiver, $subject, $body, $sender)) {
+            echo "Email sent successfully to $receiver";
+        } else {
+            echo "Sorry, failed while sending mail!";
+        }
     } else {
         echo $valid = "";
     }
 }
 
 
-//with foreach loop using the structure of the checkbox generator to cycle through all checked values
-// and returning a 0 value if unchecked so that they are still able to be added to the $_SESSION;
 
-//whatIsHappening();
+
+
+
+whatIsHappening();
 
 require 'form-view.php';

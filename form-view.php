@@ -9,6 +9,15 @@
     <title>Order food & drinks</title>
 </head>
 <body>
+<!--<fieldset>
+    <legend>Errors</legend>
+    <?php /*foreach ($errors AS $e => $error):
+        if $$e
+        */?>
+        <label>
+            <input name="errors[<?php /*echo $e */?>]"/> <?php /*echo $error['value'] */?> </label><br />
+    <?php /*endforeach; */?>
+</fieldset>-->
 
 <div class="container">
     <h1>Order food in restaurant "the Personal Ham Processors"</h1>
